@@ -1,8 +1,9 @@
 from SDXL.sdxl_bg_remove import sdxl_bg_remove
 from zero123.myinference import get_front_and_back 
+import os
+import argparse
 
-
-def main(args)
+def main(args):
 
     prompts = ["a crab, low poly",
                "a bald eagle carved out of wood",
@@ -10,12 +11,13 @@ def main(args)
     
     # generate images from the prompts by SDXL and remove background
     images = sdxl_bg_remove(prompts)
-
-    for img in images:
-        # get front and back image from zero123
-        front, back = get_front_and_back(cond_image=img)
-        
-        # forward the front and back image to gassian splatting
+    
+    # get front and back image from zero123
+    image_pairs = get_front_and_back(cond_images=images)
+    for i in range(len(image_pairs)):
+        image_pairs[i][0].save(f"{args.output_path}/{i}_front.png")
+        image_pairs[i][1].save(f"{args.output_path}/{i}_back.png")
+    # forward the front and back image to gassian splatting
 
 
 if __name__ == '__main__':

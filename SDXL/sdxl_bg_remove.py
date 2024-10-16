@@ -1,6 +1,6 @@
 import torch
-from transformers import UMT5EncoderModel
-from diffusers import AutoPipelineForText2Image
+#from transformers import UMT5EncoderModel
+#from diffusers import AutoPipelineForText2Image
 from diffusers import DiffusionPipeline
 import torch
 import pandas as pd
@@ -20,13 +20,13 @@ def sdxl_bg_remove(prompts):
 
     #batch_size = 10
 
-
+    '''
     if os.path.exists('temp2'):
         shutil.rmtree('temp2')
     os.makedirs("temp2", exist_ok=True)
 
     paths = ["temp1", "temp2"]
-    
+    '''
     images=[]
 
     pipe = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, use_safetensors=True, variant="fp16")
@@ -44,6 +44,7 @@ def sdxl_bg_remove(prompts):
     print("Total Time SDXL: %4f seconds" % (end_time - start_time))
 
     start_time = time.time()
+    final_images = []
     for i, image in enumerate(images):
         #image_resized = image.resize((376, 263), Image.Resampling.LANCZOS)
         #image_resized.save(f"temp2/XL-image{i}.jpg")
@@ -51,13 +52,14 @@ def sdxl_bg_remove(prompts):
         pipe2 = pipeline("image-segmentation", model="briaai/RMBG-1.4", trust_remote_code=True, device=device)
         #pillow_mask = pipe2(image, return_mask = True) # outputs a pillow mask
         final_image = pipe2(image) # applies mask on input and returns a pillow image
-        final_image.convert('RGB').save(f"XL-image-NoBG{i}.jpg")
+        #final_image.convert('RGB').save(f"XL-image-NoBG{i}.jpg")
+        final_images.append(final_image.convert('RGB'))
         #plt.imshow(final_image)
         #plt.show()
     
     end_time = time.time()
     print("Total Time BG Removal: %4f seconds" % (end_time - start_time))
-    return final_image
+    return final_images
 
 if __name__ == '__main__':
 
@@ -67,7 +69,8 @@ if __name__ == '__main__':
 
     result = sdxl_bg_remove(prompts)
     
-
+    for i in range(len(prompts)):
+        result[i].save(f"{i}.png")
 
 
 

@@ -205,15 +205,15 @@ def predict(device_idx: int =_GPU_INDEX,
     file_name = os.path.basename(cond_image_path).split('/')[-1]
     pred_image.save(f"{output_image_path}/{file_name}")
 
-def get_front_and_back(cond_image,
+def get_front_and_back(cond_images,
                        device_idx = _GPU_INDEX,
-                       ckpt = "./pretrained/zero123-xl.ckpt",
-                       config ="./configs/sd-objaverse-finetune-c_concat-256.yaml"):
+                       ckpt = "./zero123/pretrained/zero123-xl.ckpt",
+                       config ="./zero123/configs/sd-objaverse-finetune-c_concat-256.yaml"):
     device = f"cuda:{device_idx}"
     config = OmegaConf.load(config)
 
     assert os.path.exists(ckpt)
-    assert os.path.exists(cond_image_path)
+    #assert os.path.exists(cond_image_path)
 
     models = dict()
 
@@ -229,22 +229,24 @@ def get_front_and_back(cond_image,
         'CompVis/stable-diffusion-safety-checker')
 
     #cond_image = Image.open(cond_image_path)
+    image_pairs = []
+    for cond_image in cond_images:
+        front_images = main_run(raw_im=cond_image,
+                                models=models, device=device,
+                                elevation=np.deg2rad(0.0),
+                                azimuth=np.deg2rad(0.0),
+                                radius=1.0)
+        front_image = front_images[-1]
 
-    front_images = main_run(raw_im=cond_image,
-                            models=models, device=device,
-                            elevation=np.deg2rad(0.0),
-                            azimuth=np.deg2rad(0.0),
-                            radius=1.0)
-    front_image = front_images[-1]
+        back_images = main_run(raw_im=cond_image,
+                               models=models, device=device,
+                               elevation=np.deg2rad(0.0),
+                               azimuth=np.deg2rad(180.0),
+                               radius=1.0)
+        back_image = back_images[-1]
+        image_pairs.append((front_image, back_image))
 
-    back_images = main_run(raw_im=cond_image,
-                           models=models, device=device,
-                           elevation=np.deg2rad(0.0),
-                           azimuth=np.deg2rad(180.0),
-                           radius=1.0)
-    back_image = back_images[-1]
-
-    return front_image, back_image
+    return image_pairs
 
 if __name__ == '__main__':
     '''
@@ -261,14 +263,16 @@ if __name__ == '__main__':
     stop = timeit.default_timer()
     print(f'Time: {stop - start:.4f} sec')
     '''
-    path = "./test_img/XL-image-NoBG0.jpg"
+    path = "./zero123/test_img/XL-image-NoBG0.jpg"
     start = timeit.default_timer()
     img = Image.open(path)
-    front, back = get_front_and_back(cond_image=img)
+    images=[]
+    images.append(img)
+    image_pairs = get_front_and_back(cond_image=images)
     stop = timeit.default_timer()
     print(f'Time: {stop - start:.4f} sec')
 
     file_name = os.path.basename(path).split('/')[-1]
-    front.save(f"./myoutput/front_{file_name}")
-    back.save(f"./myoutput/back_{file_name}")
+    image_pairs[0][0].save(f"./myoutput/front_{file_name}")
+    image_pairs[0][1].save(f"./myoutput/back_{file_name}")
 
