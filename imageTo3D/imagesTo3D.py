@@ -130,13 +130,13 @@ def reconstruct_and_export(image, input_image_path):
         rendered_image = t_to_512(rendered_image)
         loop_renders.append(torch.clamp(rendered_image * 255, 0.0, 255.0).detach().permute(1, 2, 0).cpu().numpy().astype(np.uint8))
 
-    loop_out_path = f'./loop_{os.path.basename(input_image_path)}.mp4'
+    loop_out_path = f'{input_image_path}loop.mp4'
     print(loop_out_path)
-    imageio.mimsave("/content/loop_.mp4", loop_renders, fps=25)
+    imageio.mimsave(loop_out_path, loop_renders, fps=25)
 
     # Export to .ply
-    ply_out_path = f'./mesh_{os.path.basename(input_image_path)}.ply'
-    export_to_obj(reconstruction_unactivated, "/content/mesh.ply")
+    ply_out_path = f'{input_image_path}mesh.ply'
+    export_to_obj(reconstruction_unactivated, ply_out_path)
 
     return ply_out_path, loop_out_path
 
@@ -159,21 +159,22 @@ def reconstruct_and_export(image, input_image_path):
 # model.load_state_dict(ckpt_loaded["model_state_dict"])
 # model.to("cuda")
 
-# List of image paths
-image_paths = [
-    "/content/back_XL-image-NoBG1.jpg",
-    "/content/front_XL-image-NoBG1.jpg"
-]
+if __name__ == '__main__':
+    # List of image paths
+    image_paths = [
+        "/content/back_XL-image-NoBG1.jpg",
+        "/content/front_XL-image-NoBG1.jpg"
+    ]
 
 
-image = Image.open("/content/back_XL-image-NoBG1.jpg")
+    image = Image.open("/content/back_XL-image-NoBG1.jpg")
 
-# Process each image
+    # Process each image
 
-a = preprocess(image, preprocess_background=True, foreground_ratio=0.65)
+    a = preprocess(image, preprocess_background=True, foreground_ratio=0.65)
 
-# Perform reconstruction and export results
-ply_out_path, loop_out_path = reconstruct_and_export(np.array(a), "/content/back_XL-image-NoBG1.jpg")
+    # Perform reconstruction and export results
+    ply_out_path, loop_out_path = reconstruct_and_export(np.array(a), "/content/")
 
-print(f"3D model saved to {ply_out_path}")
-print(f"Video render saved to {loop_out_path}")
+    print(f"3D model saved to {ply_out_path}")
+    print(f"Video render saved to {loop_out_path}")
