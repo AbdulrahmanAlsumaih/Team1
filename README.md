@@ -1,5 +1,3 @@
-Sure! Here’s the complete `README.md` for you to copy:
-
 ````markdown
 # Generative Models with Stable Diffusion XL
 
