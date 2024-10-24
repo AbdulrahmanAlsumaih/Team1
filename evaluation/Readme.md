@@ -27,7 +27,7 @@ The code evaluates image-text similarity using CLIP's cosine similarity between 
 
 ### Steps:
 1. **Setup**: The CLIP model is loaded, and GPU support is enabled if available.
-2. **Dataset Structure**: Images are stored in subfolders under `/dreamfusion/` and `/ourpipeline/` for different prompts.
+2. **Dataset Structure**: Images are stored in subfolders under `/dreamfusion/` and `/pipeline/` for different prompts.
 3. **Processing**: 
    - Images are loaded and preprocessed.
    - Text tokens are generated using the given prompts.
@@ -77,17 +77,21 @@ The images for evaluation should be structured as follows:
       └── ...
 ```
 
-## Prompts
+# Prompts
 
-The evaluation is based on predefined prompts:
+The evaluation is based on the names of the folders in the dataset. For example:
 
 ```python
 prompts = [
     "a crab, low poly",
     "a bald eagle carved out of wood",
-    "delicious hamburger"
+    "a ripe strawberry",
+    "a silver platter piled high with fruits",
+    "an ice cream sundae"
 ]
 ```
+Each folder name in /dreamfusion/ and /pipeline/ directories serves as the prompt for the corresponding images.
+
 
 ## Usage
 
