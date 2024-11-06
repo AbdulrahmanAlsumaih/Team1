@@ -10,6 +10,8 @@ Original file is located at
 from google.colab import drive
 drive.mount('/content/drive')
 
+"""# **Metrics**"""
+
 !pip install git+https://github.com/openai/CLIP.git
 !pip install torch torchvision
 !pip install numpy pillow
@@ -23,15 +25,16 @@ from PIL import Image
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
 
-# Define the dataset path
+# Define the dataset base path and pipeline subdirectory
 base_path = "/content/drive/MyDrive/CAP_6411_COMPUTER_VISION_SYSTEMS/final_project/data"
+pipeline_path = os.path.join(base_path, "pipeline")
 
-# Define your prompts
-prompts = [
-    "a crab, low poly",
-    "a bald eagle carved out of wood",
-    "delicious hamburger"
-]
+# Fetch folder names from the pipeline subdirectory, excluding hidden directories (starting with '.')
+prompts = [folder_name for folder_name in os.listdir(pipeline_path)
+           if os.path.isdir(os.path.join(pipeline_path, folder_name)) and not folder_name.startswith('.')]
+
+# Now `prompts` will contain the filtered folder names as prompts
+print("Prompts:", prompts)
 
 # Iterate through each prompt to compute similarity with the corresponding images
 for prompt in prompts:
@@ -41,8 +44,8 @@ for prompt in prompts:
     # Define paths to images
     dreamfusion_front_path = os.path.join(base_path, "dreamfusion", prompt, "front.png")
     dreamfusion_back_path = os.path.join(base_path, "dreamfusion", prompt, "back.png")
-    ourpipeline_front_path = os.path.join(base_path, "ourpipeline", prompt, "front.jpg")
-    ourpipeline_back_path = os.path.join(base_path, "ourpipeline", prompt, "back.jpg")
+    ourpipeline_front_path = os.path.join(base_path, "pipeline", prompt, "front.png")
+    ourpipeline_back_path = os.path.join(base_path, "pipeline", prompt, "back.png")
 
     # Function to load and preprocess images
     def load_and_preprocess_image(image_path):
@@ -108,8 +111,8 @@ for prompt in prompts:
     # Define paths to front and back images for both methods
     dreamfusion_front_path = os.path.join(base_path, "dreamfusion", prompt, "front.png")
     dreamfusion_back_path = os.path.join(base_path, "dreamfusion", prompt, "back.png")
-    ourpipeline_front_path = os.path.join(base_path, "ourpipeline", prompt, "front.jpg")
-    ourpipeline_back_path = os.path.join(base_path, "ourpipeline", prompt, "back.jpg")
+    ourpipeline_front_path = os.path.join(base_path, "pipeline", prompt, "front.png")
+    ourpipeline_back_path = os.path.join(base_path, "pipeline", prompt, "back.png")
 
     # Load images
     dreamfusion_front = load_and_preprocess_image(dreamfusion_front_path)
@@ -140,10 +143,12 @@ for prompt in prompts:
             print(f"--- Pairwise Similarity for OurPipeline: '{prompt}' ---")
             print(f"Front vs Back Cosine Similarity: {ourpipeline_pairwise_similarity:.4f}\n")
 
+!pip install lpips
 import lpips
 import torch
 from PIL import Image
 import torchvision.transforms as transforms
+import os
 
 # Load LPIPS model
 lpips_model = lpips.LPIPS(net='alex').to(device)
@@ -160,15 +165,17 @@ def load_image_lpips(image_path):
         img = Image.open(image_path).convert('RGB')
         img = resize_transform(img).unsqueeze(0).to(device)
         return img
-    return None
+    else:
+        print(f"Image not found: {image_path}")
+        return None
 
 # Iterate through each prompt to compute LPIPS for perceptual similarity between DreamFusion and OurPipeline
 for prompt in prompts:
     # Define paths to the front and back images of both methods
     dreamfusion_front_path = os.path.join(base_path, "dreamfusion", prompt, "front.png")
-    ourpipeline_front_path = os.path.join(base_path, "ourpipeline", prompt, "front.jpg")
+    ourpipeline_front_path = os.path.join(base_path, "pipeline", prompt, "front.png")
     dreamfusion_back_path = os.path.join(base_path, "dreamfusion", prompt, "back.png")
-    ourpipeline_back_path = os.path.join(base_path, "ourpipeline", prompt, "back.jpg")
+    ourpipeline_back_path = os.path.join(base_path, "pipeline", prompt, "back.png")
 
     # Load and preprocess images
     dreamfusion_front = load_image_lpips(dreamfusion_front_path)
@@ -176,18 +183,35 @@ for prompt in prompts:
     dreamfusion_back = load_image_lpips(dreamfusion_back_path)
     ourpipeline_back = load_image_lpips(ourpipeline_back_path)
 
+    # Check if the images were loaded correctly and print error if necessary
+    if dreamfusion_front is None:
+        print(f"DreamFusion Front Image is missing for '{prompt}'")
+    if ourpipeline_front is None:
+        print(f"OurPipeline Front Image is missing for '{prompt}'")
+    if dreamfusion_back is None:
+        print(f"DreamFusion Back Image is missing for '{prompt}'")
+    if ourpipeline_back is None:
+        print(f"OurPipeline Back Image is missing for '{prompt}'")
+
     with torch.no_grad():
         # Calculate LPIPS for the front view if images exist
         if dreamfusion_front is not None and ourpipeline_front is not None:
-            lpips_score_front = lpips_model(dreamfusion_front, ourpipeline_front)
-            print(f"--- LPIPS for Front View: '{prompt}' ---")
-            print(f"Perceptual Similarity Score (lower is better): {lpips_score_front.item():.4f}\n")
+            try:
+                lpips_score_front = lpips_model(dreamfusion_front, ourpipeline_front)
+                print(f"--- LPIPS for Front View: '{prompt}' ---")
+                print(f"Perceptual Similarity Score (lower is better): {lpips_score_front.item():.4f}\n")
+            except Exception as e:
+                print(f"Error calculating LPIPS for Front View: {e}")
+        else:
+            print(f"Skipping LPIPS for Front View: '{prompt}' - Images missing\n")
 
         # Calculate LPIPS for the back view if images exist
         if dreamfusion_back is not None and ourpipeline_back is not None:
-            lpips_score_back = lpips_model(dreamfusion_back, ourpipeline_back)
-            print(f"--- LPIPS for Back View: '{prompt}' ---")
-            print(f"Perceptual Similarity Score (lower is better): {lpips_score_back.item():.4f}\n")
-
-
-
+            try:
+                lpips_score_back = lpips_model(dreamfusion_back, ourpipeline_back)
+                print(f"--- LPIPS for Back View: '{prompt}' ---")
+                print(f"Perceptual Similarity Score (lower is better): {lpips_score_back.item():.4f}\n")
+            except Exception as e:
+                print(f"Error calculating LPIPS for Back View: {e}")
+        else:
+            print(f"Skipping LPIPS for Back View: '{prompt}' - Images missing\n")
