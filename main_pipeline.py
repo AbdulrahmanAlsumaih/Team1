@@ -1,6 +1,6 @@
 from SDXL.sdxl_bg_remove import sdxl_bg_remove
 from zero123.myinference import get_front_and_back 
-from imageTo3D.imagesTo3D import preprocess, reconstruct_and_export
+from imageTo3D.imagesTo3D import preprocess, reconstruct_and_export, get_splatter_image
 import os
 import argparse
 
@@ -14,18 +14,13 @@ def main(args):
     images = sdxl_bg_remove(prompts)
     
     # get front and back image from zero123
-    image_pairs = get_front_and_back(cond_images=images)
-    for i in range(len(image_pairs)):
-        image_pairs[i][0].save(f"{args.output_path}/{i}_front.png")
-        image_pairs[i][1].save(f"{args.output_path}/{i}_back.png")
+    #image_pairs = get_front_and_back(cond_images=images)
+    #for i in range(len(image_pairs)):
+    #    image_pairs[i][0].save(f"{args.output_path}/{i}_front.png")
+    #    image_pairs[i][1].save(f"{args.output_path}/{i}_back.png")
     # forward the front and back image to gassian splatting
 
-    for i in range(len(image_pairs)):
-        a = preprocess(image_pairs[i][0], preprocess_background=True, foreground_ratio=0.65)
-        ply_out_path, loop_out_path = reconstruct_and_export(np.array(a), f"{args.output_path}/{i}_")
-
-        print(f"3D model saved to {ply_out_path}")
-        print(f"Video render saved to {loop_out_path}")
+    get_splatter_image(images, f"{args.output_path}")
 
 if __name__ == '__main__':
 
