@@ -1,0 +1,14 @@
+#scp file newton -> local
+scp -i id_rsa cap6411.student2@newton.ist.ucf.edu:/home/cap6411.student2/cvs/threestudio  /Users/saurabhagarwal/
+
+
+#scp directory newton -> local
+scp -r -i id_rsa cap6411.student2@newton.ist.ucf.edu:/home/cap6411.student2/shikra/exp  /Users/saurabhagarwal/
+
+
+#scp file local -> newton
+scp -i id_rsa /Users/saurabhagarwal/Downloads/prompts.json cap6411.student2@newton.ist.ucf.edu:/home/cap6411.student2/cvs/threestudio
+
+
+#scp directory local -> newton
+scp -i id_rsa -r /Users/saurabhagarwal/Downloads/scripts cap6411.student2@newton.ist.ucf.edu:/home/cap6411.student2/cvs/
