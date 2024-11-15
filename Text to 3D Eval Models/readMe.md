@@ -2,6 +2,53 @@
 
 Welcome to the **Text-to-3D Models** repository. This project is dedicated to generating 3D models from textual descriptions using cutting-edge machine learning models. The repository provides scripts, configurations, and tools to enable and facilitate the generation of diverse and high-quality 3D models from text prompts.
 
+## Model Rendered Outputs
+
+### Control4D Output
+![Elon Musk wearing red shirt](Samples/Control4D_output_twindom_Elon_Musk_wearing_red_shirt_RAW_photo_high_detailed_skin.gif)
+
+### Magic3D IF Output
+![Bicycle Helmet - Magic3D Refine](Samples/Magic3D_IF_output_magic3d-refine-sd_A_bicycle_helmet_0.gif)
+
+### DreamFusion IF Output
+![Pumpkin](Samples/DreamFusion_IF_output_an_orange_pumpkin.gif)
+
+### Magic3D SD Output
+![Delicious Hamburger](Samples/Magic3D_SD_output_a_delicious_hamburger.gif)
+
+### ProlificDreamer Output
+![Pineapple](Samples/ProlificDreamer_output_a_pineapple.gif)
+
+### Fantasia3D Output
+![Ice Cream Sundae](Samples/Fantasia3D_output_a_DSLR_photo_of_an_ice_cream_sundae.gif)
+![Ice Cream Sundae Texture](Samples/Fantasia3D_output_a_DSLR_photo_of_an_ice_cream_sundae_texture.gif)
+
+### ScoreJacobianChaining Output
+![High-Quality Burger](Samples/ScoreJacobianChaining_output_A_high_quality_photo_of_a_delicious_burger.gif)
+
+### Stable DreamFusion Output
+![Hamburger](Samples/Stable_DreamFusion_output_a_hamburger.gif)
+![Eagle](Samples/Stable_DreamFusion_output_an_eagle.gif)
+
+### Latent NeRF Output
+![Delicious Hamburger](Samples/Latent_NeRF_output_a_delicious_hamburger.gif)
+![Delicious Hamburger Refine](Samples/Latent_NeRF_output_a_delicious_hamburger_refine.gif)
+
+### Magic123 Output
+![Delicious Hamburger Course](Samples/Magic123_output_a_delicious_hamburger_course.gif)
+![Delicious Hamburger Refine](Samples/Magic123_output_a_delicious_hamburger_refine.gif)
+
+### Magic3D IF Output - Coarse
+![Bicycle Helmet Coarse](Samples/Magic3D_IF_output_magic3d-coarse-if_A_bicycle_helmet_0.gif)
+
+### TextMesh Output
+![Cowboy Boots](Samples/TextMesh_output_cowboy_boots.gif)
+
+### Shap-E Output
+![Mesh Example](Samples/shap_e_ImageToStl.com_example_mesh_0.gif)
+
+
+here is the final code. But I want some scaling, can we make the .gif render in a similar size?
 ## Repository Structure
 
 - **Models/**: Contains all the different models tested in this repository. Each model folder includes:
