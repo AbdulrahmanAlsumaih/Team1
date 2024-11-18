@@ -1,6 +1,6 @@
 from SDXL.sdxl_bg_remove import sdxl_bg_remove
 from zero123.myinference import get_front_and_back 
-from imageTo3D.imagesTo3D import preprocess, reconstruct_and_export, get_splatter_image
+from imageTo3D.my_imagesTo3D import preprocess, reconstruct_and_export, get_splatter_image
 import os
 import argparse
 
