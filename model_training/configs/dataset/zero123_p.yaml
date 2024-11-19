@@ -1,0 +1,10 @@
+# @package _global_
+data:
+  znear: 0.8
+  zfar: 3.2
+  category: zero123_p
+  white_background: true
+  origin_distances: false
+  training_resolution: 128
+  fov: 30
+
