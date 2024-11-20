@@ -1,6 +1,4 @@
-Here’s the revised and more readable version of the README with the added information:
-
----
+# Developed by Abdulrahman Al Sumaih
 
 # README for 3D Video Generation App
 
@@ -129,8 +127,4 @@ For any issues, questions, or contributions, feel free to open an issue or submi
 
 This README provides all the essential details to understand, install, and run the 3D video generation application, including details on the `setup.sh` script and its functions.
 
-**Developed by Abdulrahman Al Sumaih.**
-
 ---
-
-Let me know if you need any further changes!
