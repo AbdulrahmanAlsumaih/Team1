@@ -1,4 +1,6 @@
-Here's the updated README with additional information on the `setup.sh` script:
+Here’s the revised and more readable version of the README with the added information:
+
+---
 
 # README for 3D Video Generation App
 
@@ -37,24 +39,11 @@ Ensure you have Python 3.x installed, along with the following dependencies:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-repo/3d-video-generator.git
-   cd 3d-video-generator
+   git clone https://github.com/AbdulrahmanAlsumaih/Team1.git
+   cd UX
    ```
 
-2. **Run the setup script**:
-   Execute the provided `setup.sh` script to install necessary dependencies and clone required repositories:
-
-   ```bash
-   bash setup.sh
-   ```
-
-   This script:
-
-   - Installs `libglm-dev` for necessary graphics libraries.
-   - Clones the `splatter-image` repository if it does not already exist and installs its dependencies.
-   - Clones the `diff-gaussian-rasterization` repository if it does not already exist and builds the required C extensions.
-
-3. **Install the remaining Python packages**:
+2. **Install the remaining Python packages**:
 
    ```bash
    pip install -r requirements.txt
@@ -76,10 +65,6 @@ Ensure you have Python 3.x installed, along with the following dependencies:
    gradio
    ```
 
-4. **Prepare model files**:
-   - Place the configuration file (`gradio_config.yaml`) in the appropriate path (`/home/user/app/splatter-image/`).
-   - Ensure the pre-trained model (`model_latest.pth`) is in the required path or downloaded via `hf_hub_download`.
-
 ## Usage
 
 To run the application:
@@ -99,7 +84,7 @@ python app.py
 
 ### `setup.sh` Script
 
-The `setup.sh` script performs the following:
+The `setup.sh` script performs the following actions:
 
 - Installs `libglm-dev` for graphics support.
 - Clones the `splatter-image` repository and installs its dependencies.
@@ -143,3 +128,9 @@ For any issues, questions, or contributions, feel free to open an issue or submi
 ---
 
 This README provides all the essential details to understand, install, and run the 3D video generation application, including details on the `setup.sh` script and its functions.
+
+**Developed by Abdulrahman Al Sumaih.**
+
+---
+
+Let me know if you need any further changes!
